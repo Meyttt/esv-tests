@@ -441,7 +441,7 @@ public interface SignatureToolSoap {
         boolean verifySignatureOnly);
 
     /**
-     * 
+     *
      * @param message
      * @param verifySignatureOnly
      * @return
@@ -452,10 +452,10 @@ public interface SignatureToolSoap {
     @RequestWrapper(localName = "VerifyXAdES", targetNamespace = "http://esv.server.rt.ru", className = "ru.rt.server.esv.VerifyXAdES")
     @ResponseWrapper(localName = "VerifyXAdESResponse", targetNamespace = "http://esv.server.rt.ru", className = "ru.rt.server.esv.VerifyXAdESResponse")
     public VerificationResult verifyXAdES(
-        @WebParam(name = "message", targetNamespace = "http://esv.server.rt.ru")
-        byte[] message,
-        @WebParam(name = "verifySignatureOnly", targetNamespace = "http://esv.server.rt.ru")
-        boolean verifySignatureOnly);
+            @WebParam(name = "message", targetNamespace = "http://esv.server.rt.ru")
+            byte[] message,
+            @WebParam(name = "verifySignatureOnly", targetNamespace = "http://esv.server.rt.ru")
+            boolean verifySignatureOnly);
 
     /**
      * 

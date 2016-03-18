@@ -10,4 +10,10 @@ public class Common {
     public static byte[] readFromFile(String filename) throws IOException {
         return FileUtils.readFileToByteArray(new File(filename));
     }
+
+    //gp
+    /*public static byte[] writeByteArrayToFile(String byte[]) throws IOException {
+        return FileUtils.writeByteArrayToFile(new File(filename));
+    }*/
+    //gp
 }
