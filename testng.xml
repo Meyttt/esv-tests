@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="ESV Tests" parallel="false">
+    <test name="ESV Service">
+        <classes>
+            <class name="ru.voskhod.tests.esv.SimpleTests">
+                <methods>
+                    <include name="verifyCertificate.*"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

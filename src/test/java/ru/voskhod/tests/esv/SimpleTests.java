@@ -1,18 +1,15 @@
 package ru.voskhod.tests.esv;
 
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.xml.security.exceptions.Base64DecodingException;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import ru.rt.server.esv.VerificationResult;
 import ru.rt.server.esv.VerificationResultWithReport;
 import ru.rt.server.esv.VerificationResultWithSignedReport;
-
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -31,7 +28,11 @@ public class SimpleTests extends TestBase {
                                                             /* Certificate */
 //Корректный сертификат
 
-    @Test
+    //TODO логирование тел сообщений на уровне trace: logger.trace
+    //TODO добавить description
+    //TODO обновить testng.xml
+
+    @Test (description = "GUTS-ESV1: Проверка сертификата")
      public void verifyCertificate() throws IOException {
         VerificationResult verificationResult = client.verifyCertificate(Common.readFromFile("data/IS_GUTS_2016_1.cer"));
 
@@ -41,7 +42,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV2: Проверка сертификата с отчетом")
     public void verifyCertificateWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCertificateWithReport(Common.readFromFile("data/IS_GUTS_2016_1.cer"));
 
