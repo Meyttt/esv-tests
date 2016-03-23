@@ -6,6 +6,15 @@
             <class name="ru.voskhod.tests.esv.SimpleTests">
                 <methods>
                     <include name="verifyCertificate.*"/>
+                    <include name="verifyCMSSignature.*"/>
+                    <include name="verifyCMSSignatureDetached.*"/>
+                    <include name="verifyCMSSignatureByHash.*"/>
+                    <include name="verifyXAdES.*"/>
+                    <include name="verifyXMLSignature.*"/>
+                    <include name="verifyPAdES.*"/>
+                    <include name="verifyTimeStamp.*"/>
+                    <include name="verifyWSSSignature.*"/>
+                    <include name="verifyCAdES.*"/>
                 </methods>
             </class>
         </classes>

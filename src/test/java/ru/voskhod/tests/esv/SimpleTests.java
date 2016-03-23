@@ -32,7 +32,7 @@ public class SimpleTests extends TestBase {
     //TODO добавить description
     //TODO обновить testng.xml
 
-    @Test (description = "GUTS-ESV1: Проверка сертификата")
+    @Test (description = "GUTS-ESV1: Проверка корректного сертификата")
      public void verifyCertificate() throws IOException {
         VerificationResult verificationResult = client.verifyCertificate(Common.readFromFile("data/IS_GUTS_2016_1.cer"));
 
@@ -42,7 +42,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром");
     }
 
-    @Test (description = "GUTS-ESV2: Проверка сертификата с отчетом")
+    @Test (description = "GUTS-ESV2: Проверка корректного сертификата с отчетом")
     public void verifyCertificateWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCertificateWithReport(Common.readFromFile("data/IS_GUTS_2016_1.cer"));
 
@@ -51,12 +51,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подлинность сертификата ПОДТВЕРЖДЕНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV3: Проверка корректного сертификата с подписанным отчетом")
     public void verifyCertificateWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCertificateWithSignedReport(Common.readFromFile("data/IS_GUTS_2016_1.cer"));
 
@@ -69,8 +69,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("ПОДТВЕРЖДЕНА"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("7F6088280765F2BFB57115B7085AB8462899387B7019E5637C2785D348FF2110"));
@@ -84,7 +84,7 @@ public class SimpleTests extends TestBase {
 
 //Revoked сертификат аккредитованного УЦ
 
-    @Test
+    @Test (description = "GUTS-ESV4: Проверка Revoked сертификата аккредитованного УЦ")
     public void verifyRevokedCertificate() throws IOException {
         VerificationResult verificationResult = client.verifyCertificate(Common.readFromFile("data/IS_GUTS_2016_2.cer"));
 
@@ -94,7 +94,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Один из сертификатов цепочки аннулирован");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV5: Проверка Revoked сертификата аккредитованного УЦ с отчетом")
     public void verifyRevokedCertificateWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCertificateWithReport(Common.readFromFile("data/IS_GUTS_2016_2.cer"));
 
@@ -103,12 +103,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 7);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Один из сертификатов цепочки аннулирован");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подлинность сертификата НЕ ПОДТВЕРЖДЕНА"));
         Assert.assertTrue(report.contains("<State>The certificate is revoked"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV6: Проверка Revoked сертификата аккредитованного УЦ с подписанным отчетом")
     public void verifyRevokedCertificateWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCertificateWithSignedReport(Common.readFromFile("data/IS_GUTS_2016_2.cer"));
 
@@ -121,8 +121,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕ ПОДТВЕРЖДЕНА"));
         Assert.assertTrue(report.contains("The certificate is revoked."));
         Assert.assertTrue(report.contains("5D3510032619F4C5183D1C1418B9F4C61C71B444F7CC115F0DA415CB2BA70D98"));
@@ -136,7 +136,7 @@ public class SimpleTests extends TestBase {
 
 //Корректный сертификат неаккредитованного УЦ
 
-    @Test
+    @Test (description = "GUTS-ESV7: Проверка корректного сертификата неаккредитованного УЦ")
     public void verifyMyCertificate() throws IOException {
         VerificationResult verificationResult = client.verifyCertificate(Common.readFromFile("data/Мой сертификат.cer"));
 
@@ -146,7 +146,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Сертификат был выдан не аккредитованным УЦ/не доверенным УЦ");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV8: Проверка корректного сертификата неаккредитованного УЦ с отчетом")
     public void verifyMyCertificateWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCertificateWithReport(Common.readFromFile("data/Мой сертификат.cer"));
 
@@ -155,12 +155,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 15);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Сертификат был выдан не аккредитованным УЦ/не доверенным УЦ");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подлинность сертификата НЕ ПОДТВЕРЖДЕНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Сертификат был выдан не аккредитованным УЦ/не доверенным УЦ"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV7: Проверка корректного сертификата неаккредитованного УЦ с подписанным отчетом")
     public void verifyMyCertificateWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCertificateWithSignedReport(Common.readFromFile("data/Мой сертификат.cer"));
 
@@ -173,8 +173,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕ ПОДТВЕРЖДЕНА"));
         Assert.assertTrue(report.contains("B0F9ACD0462519F72D1A241E1D665704F62C7500A9142620FB3FDE551C47A6D2"));
 
@@ -187,7 +187,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректный сертификат
 
-    @Test
+    @Test (description = "GUTS-ESV10: Проверка некорректного сертификата")
     public void verifyBadSignatureCertificate() throws IOException {
         VerificationResult verificationResult = client.verifyCertificate(Common.readFromFile("data/IS_GUTS_2016_1 Некорректный.cer"));
 
@@ -197,7 +197,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "У одного из сертификатов в цепочке некорректная подпись");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV11: Проверка некорректного сертификата с отчетом")
     public void verifyBadSignatureCertificateWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCertificateWithReport(Common.readFromFile("data/IS_GUTS_2016_1 Некорректный.cer"));
 
@@ -206,12 +206,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "У одного из сертификатов в цепочке некорректная подпись");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подлинность сертификата НЕ ПОДТВЕРЖДЕНА"));
         Assert.assertTrue(report.contains("CertStatus=\"У одного из сертификатов в цепочке некорректная подпись"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV12: Проверка некорректного сертификата с подписанным отчетом")
     public void verifyBadSignatureCertificateWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCertificateWithSignedReport(Common.readFromFile("data/IS_GUTS_2016_1 Некорректный.cer"));
 
@@ -224,8 +224,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕ ПОДТВЕРЖДЕНА"));
         Assert.assertTrue(report.contains("E0532E7379888EBD76993B8F120E60BA60F392C54868C62A437909BC3EF4DA7E"));
 
@@ -238,7 +238,7 @@ public class SimpleTests extends TestBase {
 
 //Просроченный сертификат
 
-    @Test
+    @Test (description = "GUTS-ESV13: Проверка просроченного сертификата")
     public void verifyBadSignature1Certificate() throws IOException {
         VerificationResult verificationResult = client.verifyCertificate(Common.readFromFile("data/Некорректный сертификат КриптоПро.cer"));
 
@@ -248,7 +248,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Срок действия одного из сертификатов цепочки истек или еще не наступил");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV14: Проверка просроченного сертификата с отчетом")
     public void verifyBadSignature1CertificateWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCertificateWithReport(Common.readFromFile("data/Некорректный сертификат КриптоПро.cer"));
 
@@ -257,12 +257,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 5);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Срок действия одного из сертификатов цепочки истек или еще не наступил");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подлинность сертификата НЕ ПОДТВЕРЖДЕНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Срок действия одного из сертификатов цепочки истек или еще не наступил"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV15: Проверка просроченного сертификата с подписанным отчетом")
     public void verifyBadSignature1CertificateWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCertificateWithSignedReport(Common.readFromFile("data/Некорректный сертификат КриптоПро.cer"));
 
@@ -275,8 +275,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕ ПОДТВЕРЖДЕНА"));
         Assert.assertTrue(report.contains("9B7D448059C70170F1F8F4D0A9BB391C622FF95DDC1B2809BA692CF011DB9328"));
 
@@ -290,7 +290,7 @@ public class SimpleTests extends TestBase {
                                                             /* CMS Attached */
 //Корректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV16: Проверка корректного CMS с признаком false")
     public void verifyCMSfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignature(Common.readFromFile("data/CMS.sig"), false);
 
@@ -300,7 +300,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV17: Проверка корректного CMS с признаком false с отчетом")
     public void verifyCMSSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureWithReport(Common.readFromFile("data/CMS.sig"), false);
 
@@ -309,12 +309,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV18: Проверка корректного CMS с признаком false с подписанным отчетом")
     public void verifyCMSSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureWithSignedReport(Common.readFromFile("data/CMS.sig"), false);
 
@@ -328,8 +328,8 @@ public class SimpleTests extends TestBase {
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("24F840E895E54D6074CFE9C57C83D8DEA438E1BDE78643FC5D5C1A08CC2644CC"));
@@ -343,7 +343,7 @@ public class SimpleTests extends TestBase {
 
 // Корректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV19: Проверка корректного CMS с признаком true")
     public void verifyCMStrue() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignature(Common.readFromFile("data/CMS.sig"), true);
 
@@ -353,7 +353,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV20: Проверка корректного CMS с признаком true с отчетом")
     public void verifyCMSSignature1WithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureWithReport(Common.readFromFile("data/CMS.sig"), true);
 
@@ -362,12 +362,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV21: Проверка корректного CMS с признаком true с подписанным отчетом")
     public void verifyCMSSignature1WithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureWithSignedReport(Common.readFromFile("data/CMS.sig"), true);
 
@@ -381,8 +381,8 @@ public class SimpleTests extends TestBase {
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("24F840E895E54D6074CFE9C57C83D8DEA438E1BDE78643FC5D5C1A08CC2644CC"));
@@ -396,7 +396,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV22: Проверка некорректного CMS с признаком false")
     public void verifyBadSignatureCMSfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignature(Common.readFromFile("data/CMS Некорректный.sig"), false);
 
@@ -406,7 +406,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись недействительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV23: Проверка некорректного CMS с признаком false с отчетом")
     public void verifyBadSignatureCMSSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureWithReport(Common.readFromFile("data/CMS Некорректный.sig"), false);
 
@@ -415,12 +415,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись недействительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV24: Проверка некорректного CMS с признаком false с подписанным отчетом")
     public void verifyBadSignatureCMSSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureWithSignedReport(Common.readFromFile("data/CMS Некорректный.sig"), false);
 
@@ -434,8 +434,8 @@ public class SimpleTests extends TestBase {
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("E49D91384135F865419F4C88275D89591C3D61140B74279D0C7D11E004D0394E"));
@@ -449,7 +449,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV25: Проверка некорректного CMS с признаком true")
     public void verifyBadSignatureCMStrue() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignature(Common.readFromFile("data/CMS Некорректный.sig"), true);
 
@@ -459,7 +459,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись недействительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV26: Проверка некорректного CMS с признаком true с отчетом")
     public void verifyBadSignature1CMSSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureWithReport(Common.readFromFile("data/CMS Некорректный.sig"), true);
 
@@ -468,12 +468,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись недействительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV27: Проверка некорректного CMS с признаком true с подписанным отчетом")
     public void verifyBadSignature1CMSSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureWithSignedReport(Common.readFromFile("data/CMS Некорректный.sig"), true);
 
@@ -487,8 +487,8 @@ public class SimpleTests extends TestBase {
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("E49D91384135F865419F4C88275D89591C3D61140B74279D0C7D11E004D0394E"));
@@ -504,7 +504,7 @@ public class SimpleTests extends TestBase {
 
     //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV28: Проверка CMS, Revoked с признаком false")
     public void verifyRevokedSignatureCMSfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignature(Common.readFromFile("data/CAdES-BES 2.sig"), false);
 
@@ -514,7 +514,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Сертификат подписи недействителен");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV29: Проверка CMS, Revoked с признаком false с отчетом")
     public void verifyRevokedSignatureCMSSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureWithReport(Common.readFromFile("data/CAdES-BES 2.sig"), false);
 
@@ -523,12 +523,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 13);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Сертификат подписи недействителен");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Один из сертификатов цепочки аннулирован"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV30: Проверка CMS, Revoked с признаком false с подписанным отчетом")
     public void verifyRevokedSignatureCMSSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureWithSignedReport(Common.readFromFile("data/CAdES-BES 2.sig"), false);
 
@@ -542,8 +542,8 @@ public class SimpleTests extends TestBase {
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Один из сертификатов цепочки аннулирован"));
         Assert.assertTrue(report.contains("23AE6AEE743EAAD6305525634F543E3FAC08A293108107EB0172989F7C824CA4"));
@@ -557,7 +557,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись Revoked true
 
-    @Test
+    @Test (description = "GUTS-ESV31: Проверка CMS, Revoked с признаком true")
     public void verifyRevokedSignatureCMStrue() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignature(Common.readFromFile("data/CAdES-BES 2.sig"), true);
 
@@ -567,7 +567,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV32: Проверка CMS, Revoked с признаком true с отчетом")
     public void verifyRevokedSignature1CMSSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureWithReport(Common.readFromFile("data/CAdES-BES 2.sig"), true);
 
@@ -576,12 +576,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV33: Проверка CMS, Revoked с признаком true с подписанным отчетом")
     public void verifyRevokedSignature1CMSSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureWithSignedReport(Common.readFromFile("data/CAdES-BES 2.sig"), true);
 
@@ -595,8 +595,8 @@ public class SimpleTests extends TestBase {
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("23AE6AEE743EAAD6305525634F543E3FAC08A293108107EB0172989F7C824CA4"));
@@ -610,7 +610,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись1 false
 
-    @Test
+    @Test (description = "GUTS-ESV34: Проверка некорректного 1 CMS с признаком false")
     public void verifyBadSignatureCMSfalse1() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignature(Common.readFromFile("data/CMS Некорректный1.sig"), false);
 
@@ -620,7 +620,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Внутренняя ошибка");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV35: Проверка некорректного 1 CMS с признаком false с отчетом")
     public void verifyBadSignatureCMSSignature1WithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureWithReport(Common.readFromFile("data/CMS Некорректный1.sig"), false);
 
@@ -629,12 +629,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 1);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Внутренняя ошибка");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("The hash value is not correct"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV36: Проверка некорректного 1 CMS с признаком false с подписанным отчетом")
     public void verifyBadSignatureCMSSignature1WithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureWithSignedReport(Common.readFromFile("data/CMS Некорректный1.sig"), false);
 
@@ -648,8 +648,8 @@ public class SimpleTests extends TestBase {
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("DEBECBC7767EA33912B531435590CAB3F1132E43DF41A2E5002FFF709EF63921"));
@@ -663,7 +663,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись1 true
 
-    @Test
+    @Test (description = "GUTS-ESV37: Проверка некорректного 1 CMS с признаком true")
     public void verifyBadSignatureCMStrue1() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignature(Common.readFromFile("data/CMS Некорректный1.sig"), true);
 
@@ -673,7 +673,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Внутренняя ошибка");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV38: Проверка некорректного 1 CMS с признаком true с отчетом")
     public void verifyBadSignature1CMSSignature1WithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureWithReport(Common.readFromFile("data/CMS Некорректный1.sig"), true);
 
@@ -682,12 +682,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 1);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Внутренняя ошибка");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("The hash value is not correct"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV39: Проверка некорректного 1 CMS с признаком true с подписанным отчетом")
     public void verifyBadSignature1CMSSignature1WithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureWithSignedReport(Common.readFromFile("data/CMS Некорректный1.sig"), true);
 
@@ -701,8 +701,8 @@ public class SimpleTests extends TestBase {
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("DEBECBC7767EA33912B531435590CAB3F1132E43DF41A2E5002FFF709EF63921"));
@@ -719,7 +719,7 @@ public class SimpleTests extends TestBase {
 //Корректная подпись false
 
 
-    @Test
+    @Test (description = "GUTS-ESV40: Проверка корректного CMS Detached с признаком false")
     public void verifyCMSDetachedfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignatureDetached(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached.jpg"), false);
 
@@ -729,7 +729,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV41: Проверка корректного CMS Detached с признаком false с отчетом")
     public void verifyCMSSignatureDetachedWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureDetachedWithReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached.jpg"), false);
 
@@ -738,12 +738,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV42: Проверка корректного CMS Detached с признаком false с подписанным отчетом")
     public void verifyCMSSignature1DetachedWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureDetachedWithSignedReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached.jpg"), false);
 
@@ -756,8 +756,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("377CDF28C8D1B78AAAFD7A53B32C3DBDC698B8D254BD3757E20DDB4C5F0B8544"));
@@ -771,7 +771,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV43: Проверка корректного CMS Detached с признаком true")
     public void verifyCMSDetachedtrue() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignatureDetached(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached.jpg"), true);
 
@@ -781,8 +781,8 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
-    public void verifyCMSSignature1DetachedWithReport() throws IOException, Base64DecodingException {
+    @Test (description = "GUTS-ESV44: Проверка корректного CMS Detached с признаком true с отчетом")
+    public void verify1CMSSignatureDetachedWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureDetachedWithReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached.jpg"), true);
 
         logger.info("code: " + verificationResultWithReport.getCode());
@@ -790,26 +790,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    /*@Test
-    public void verifyCMSSignatureDetachedWithSignedReport() throws IOException, Base64DecodingException {
-        VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureDetachedWithSignedReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached.jpg"), true);
-
-        logger.info("code: " + verificationResultWithSignedReport.getCode());
-        logger.info("desc: " + verificationResultWithSignedReport.getDescription());
-        Assert.assertEquals(verificationResultWithSignedReport.getCode(), 0);
-        Assert.assertEquals(verificationResultWithSignedReport.getDescription(), "Электронная подпись действительна");
-        String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
-        logger.info("repstr: " + report);
-        Assert.assertTrue(report.contains("Электронная подпись верна"));
-        Assert.assertTrue(report.contains("Не проверялся"));
-    }*/
-
-    @Test
+    @Test (description = "GUTS-ESV45: Проверка корректного CMS Detached с признаком true с подписанным отчетом")
     public void verifyCMSSignatureDetachedWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureDetachedWithSignedReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached.jpg"), true);
 
@@ -822,8 +808,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("377CDF28C8D1B78AAAFD7A53B32C3DBDC698B8D254BD3757E20DDB4C5F0B8544"));
@@ -837,7 +823,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV46: Проверка некорректного CMS Detached с признаком false")
     public void verifyBadSignatureCMSDetachedfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignatureDetached(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached1.jpg"), false);
 
@@ -847,7 +833,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись недействительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV47: Проверка некорректного CMS Detached с признаком false с отчетом")
     public void verifyBadSignatureCMSSignature1DetachedWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureDetachedWithReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached1.jpg"), false);
 
@@ -856,12 +842,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись недействительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV48: Проверка некорректного CMS Detached с признаком false с подписанным отчетом")
     public void verifyBadSignatureCMSSignatureDetachedWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureDetachedWithSignedReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached1.jpg"), false);
 
@@ -874,8 +860,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("377CDF28C8D1B78AAAFD7A53B32C3DBDC698B8D254BD3757E20DDB4C5F0B8544"));
@@ -889,7 +875,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV49: Проверка некорректного CMS Detached с признаком true")
     public void verifyBadSignatureCMSDetachedtrue() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignatureDetached(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached1.jpg"), true);
 
@@ -899,7 +885,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись недействительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV50: Проверка некорректного CMS Detached с признаком true с отчетом")
     public void verifyBadSignature1CMSSignature1DetachedWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureDetachedWithReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached1.jpg"), true);
 
@@ -908,12 +894,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись недействительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV51: Проверка некорректного CMS Detached с признаком true с подписанным отчетом")
     public void verifyBadSignature1CMSSignatureDetachedWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureDetachedWithSignedReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS Detached1.jpg"), true);
 
@@ -926,8 +912,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("377CDF28C8D1B78AAAFD7A53B32C3DBDC698B8D254BD3757E20DDB4C5F0B8544"));
@@ -943,7 +929,7 @@ public class SimpleTests extends TestBase {
 
     //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV52: Проверка CMS Detached, Revoked с признаком false")
     public void verifyRevokedSignatureCMSDetachedfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignatureDetached(Common.readFromFile("data/CMS Detached 2.sig"), Common.readFromFile("data/CMS Detached.jpg"), false);
 
@@ -953,7 +939,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Сертификат подписи недействителен");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV53: Проверка CMS Detached, Revoked с признаком false с отчетом")
     public void verifyRevokedSignatureCMSSignature1DetachedWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureDetachedWithReport(Common.readFromFile("data/CMS Detached 2.sig"), Common.readFromFile("data/CMS Detached.jpg"), false);
 
@@ -962,12 +948,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 13);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Сертификат подписи недействителен");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Один из сертификатов цепочки аннулирован"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV54: Проверка CMS Detached, Revoked с признаком false с подписанным отчетом")
     public void verifyRevokedSignatureCMSSignatureDetachedWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureDetachedWithSignedReport(Common.readFromFile("data/CMS Detached 2.sig"), Common.readFromFile("data/CMS Detached.jpg"), false);
 
@@ -980,8 +966,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Один из сертификатов цепочки аннулирован"));
         Assert.assertTrue(report.contains("B2C61567AF4B961D83EE668D9D65D891EA262FF67ABA51F3625795137E78CA9C"));
@@ -995,7 +981,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV55: Проверка CMS Detached, Revoked с признаком true")
     public void verifyRevokedSignatureCMSDetachedtrue() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignatureDetached(Common.readFromFile("data/CMS Detached 2.sig"), Common.readFromFile("data/CMS Detached.jpg"), true);
 
@@ -1005,7 +991,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV56: Проверка CMS Detached, Revoked с признаком true с отчетом")
     public void verifyRevokedSignature1CMSSignature1DetachedWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureDetachedWithReport(Common.readFromFile("data/CMS Detached 2.sig"), Common.readFromFile("data/CMS Detached.jpg"), true);
 
@@ -1014,12 +1000,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV57: Проверка CMS Detached, Revoked с признаком true с подписанным отчетом")
     public void verifyRevokedSignature1CMSSignatureDetachedWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureDetachedWithSignedReport(Common.readFromFile("data/CMS Detached 2.sig"), Common.readFromFile("data/CMS Detached.jpg"), true);
 
@@ -1032,8 +1018,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("B2C61567AF4B961D83EE668D9D65D891EA262FF67ABA51F3625795137E78CA9C"));
@@ -1049,7 +1035,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV58: Проверка корректного CMS Detached By Hash с признаком false")
     public void verifyCMSDetachedByHashfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignatureByHash(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash.sig"), false);
 
@@ -1059,7 +1045,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV59: Проверка корректного CMS Detached By Hash с признаком false с отчетом")
     public void verifyCMSSignatureByHashWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureByHashWithReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash.sig"), false);
 
@@ -1068,26 +1054,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    /*@Test
-    public void verifyCMSSignatureByHashWithSignedReport() throws IOException, Base64DecodingException {
-        VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureByHashWithSignedReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash.sig"), true);
-
-        logger.info("code: " + verificationResultWithSignedReport.getCode());
-        logger.info("desc: " + verificationResultWithSignedReport.getDescription());
-        Assert.assertEquals(verificationResultWithSignedReport.getCode(), 0);
-        Assert.assertEquals(verificationResultWithSignedReport.getDescription(), "Электронная подпись действительна");
-        String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
-        logger.info("repstr: " + report);
-        Assert.assertTrue(report.contains("Электронная подпись верна"));
-        Assert.assertTrue(report.contains("Не проверялся"));
-    }*/
-
-    @Test
+    @Test (description = "GUTS-ESV60: Проверка корректного CMS Detached By Hash с признаком false с подписанным отчетом")
     public void verifyCMSSignatureByHashWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureByHashWithSignedReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash.sig"), false);
 
@@ -1100,8 +1072,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("377CDF28C8D1B78AAAFD7A53B32C3DBDC698B8D254BD3757E20DDB4C5F0B8544"));
@@ -1115,7 +1087,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV61: Проверка корректного CMS Detached By Hash с признаком true")
     public void verifyCMSDetachedByHashtrue() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignatureByHash(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash.sig"), true);
 
@@ -1125,7 +1097,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV62: Проверка корректного CMS Detached By Hash с признаком true с отчетом")
     public void verifyCMSSignature1ByHashWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureByHashWithReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash.sig"), true);
 
@@ -1134,12 +1106,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV63: Проверка корректного CMS Detached By Hash с признаком true с подписанным отчетом")
     public void verifyCMSSignature1ByHashWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureByHashWithSignedReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash.sig"), true);
 
@@ -1152,8 +1124,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("377CDF28C8D1B78AAAFD7A53B32C3DBDC698B8D254BD3757E20DDB4C5F0B8544"));
@@ -1167,7 +1139,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV64: Проверка корректного CMS Detached By Hash с признаком false")
     public void verifyBadSignatureCMSDetachedByHashfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignatureByHash(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash Некорректный.sig"), false);
 
@@ -1177,7 +1149,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись недействительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV65: Проверка корректного CMS Detached By Hash с признаком false с отчетом")
     public void verifyBadSignatureCMSSignatureByHashWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureByHashWithReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash Некорректный.sig"), false);
 
@@ -1186,12 +1158,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись недействительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV66: Проверка корректного CMS Detached By Hash с признаком false с подписанным отчетом")
     public void verifyBadSignatureCMSSignatureByHashWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureByHashWithSignedReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash Некорректный.sig"), false);
 
@@ -1204,8 +1176,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("377CDF28C8D1B78AAAFD7A53B32C3DBDC698B8D254BD3757E20DDB4C5F0B8544"));
@@ -1219,7 +1191,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV67: Проверка корректного CMS Detached By Hash с признаком true")
     public void verifyBadSignatureCMSDetachedByHashtrue() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignatureByHash(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash Некорректный.sig"), true);
 
@@ -1229,7 +1201,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись недействительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV68: Проверка корректного CMS Detached By Hash с признаком true с отчетом")
     public void verifyBadSignature1CMSSignatureByHashWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureByHashWithReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash Некорректный.sig"), true);
 
@@ -1238,12 +1210,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись недействительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV69: Проверка корректного CMS Detached By Hash с признаком true с подписанным отчетом")
     public void verifyBadSignature1CMSSignatureByHashWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureByHashWithSignedReport(Common.readFromFile("data/CMS Detached.sig"), Common.readFromFile("data/CMS By Hash Некорректный.sig"), true);
 
@@ -1256,8 +1228,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("377CDF28C8D1B78AAAFD7A53B32C3DBDC698B8D254BD3757E20DDB4C5F0B8544"));
@@ -1273,7 +1245,7 @@ public class SimpleTests extends TestBase {
 
     //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV70: Проверка CMS Detached By Hash, Revoked с признаком false")
     public void verifyRevokedSignatureCMSDetachedByHashfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignatureByHash(Common.readFromFile("data/CMS Detached 2.sig"), Common.readFromFile("data/CMS By Hash.sig"), false);
 
@@ -1283,7 +1255,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Сертификат подписи недействителен");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV71: Проверка CMS Detached By Hash, Revoked с признаком false с отчетом")
     public void verifyRevokedSignatureCMSSignatureByHashWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureByHashWithReport(Common.readFromFile("data/CMS Detached 2.sig"), Common.readFromFile("data/CMS By Hash.sig"), false);
 
@@ -1292,12 +1264,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 13);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Сертификат подписи недействителен");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Один из сертификатов цепочки аннулирован"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV72: Проверка CMS Detached By Hash, Revoked с признаком false с подписанным отчетом")
     public void verifyRevokedSignatureCMSSignatureByHashWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureByHashWithSignedReport(Common.readFromFile("data/CMS Detached 2.sig"), Common.readFromFile("data/CMS By Hash.sig"), false);
 
@@ -1310,8 +1282,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Один из сертификатов цепочки аннулирован"));
         Assert.assertTrue(report.contains("B2C61567AF4B961D83EE668D9D65D891EA262FF67ABA51F3625795137E78CA9C"));
@@ -1325,7 +1297,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV73: Проверка CMS Detached By Hash, Revoked с признаком true")
     public void verifyRevokedSignatureCMSDetachedByHashtrue() throws IOException {
         VerificationResult verificationResult = client.verifyCMSSignatureByHash(Common.readFromFile("data/CMS Detached 2.sig"), Common.readFromFile("data/CMS By Hash.sig"), true);
 
@@ -1335,7 +1307,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV74: Проверка CMS Detached By Hash, Revoked с признаком true с отчетом")
     public void verifyRevokedSignature1CMSSignatureByHashWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureByHashWithReport(Common.readFromFile("data/CMS Detached 2.sig"), Common.readFromFile("data/CMS By Hash.sig"), true);
 
@@ -1344,12 +1316,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV75: Проверка CMS Detached By Hash, Revoked с признаком true с подписанным отчетом")
     public void verifyRevokedSignature1CMSSignatureByHashWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCMSSignatureByHashWithSignedReport(Common.readFromFile("data/CMS Detached 2.sig"), Common.readFromFile("data/CMS By Hash.sig"), true);
 
@@ -1362,8 +1334,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("B2C61567AF4B961D83EE668D9D65D891EA262FF67ABA51F3625795137E78CA9C"));
@@ -1379,7 +1351,7 @@ public class SimpleTests extends TestBase {
 
 //Корректный false
 
-    @Test
+    @Test (description = "GUTS-ESV76: Проверка корректного Timestamp с признаком false")
     public void verifyTimeStampfalse() throws IOException {
         VerificationResult verificationResult = client.verifyTimeStamp(Common.readFromFile("data/1Timestamp.sig"), false);
 
@@ -1389,7 +1361,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV77: Проверка корректного Timestamp с признаком false с отчетом")
     public void verifyTimeStampWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyTimeStampWithReport(Common.readFromFile("data/1Timestamp.sig"), false);
 
@@ -1398,12 +1370,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV78: Проверка корректного Timestamp с признаком false с подписанным отчетом")
     public void verifyTimeStampWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyTimeStampWithSignedReport(Common.readFromFile("data/1Timestamp.sig"), true);
 
@@ -1416,8 +1388,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Статус подписи: </span>действительна</p>"));
         Assert.assertTrue(report.contains("ВЕРЕН"));
         Assert.assertTrue(report.contains("0E2122824C274101BFC2FED35A42F13AEC3BE297C3B69626BCD3D32058084E4C"));
@@ -1431,7 +1403,7 @@ public class SimpleTests extends TestBase {
 
 //Корректный true
 
-    @Test
+    @Test (description = "GUTS-ESV79: Проверка корректного Timestamp с признаком true")
     public void verifyTimeStamptrue() throws IOException {
         VerificationResult verificationResult = client.verifyTimeStamp(Common.readFromFile("data/1Timestamp.sig"), true);
 
@@ -1441,7 +1413,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV80: Проверка корректного Timestamp с признаком true с отчетом")
     public void verify1TimeStampWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyTimeStampWithReport(Common.readFromFile("data/1Timestamp.sig"), true);
 
@@ -1450,12 +1422,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV81: Проверка корректного Timestamp с признаком true с подписанным отчетом")
     public void verify1TimeStampWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyTimeStampWithSignedReport(Common.readFromFile("data/1Timestamp.sig"), true);
 
@@ -1468,8 +1440,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Статус подписи: </span>действительна</p>"));
         Assert.assertTrue(report.contains("ВЕРЕН"));
         Assert.assertTrue(report.contains("0E2122824C274101BFC2FED35A42F13AEC3BE297C3B69626BCD3D32058084E4C"));
@@ -1483,7 +1455,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректный false
 
-    @Test
+    @Test (description = "GUTS-ESV82: Проверка некорректного Timestamp с признаком false")
     public void verifyBadSignatureTimeStampfalse() throws IOException {
         VerificationResult verificationResult = client.verifyTimeStamp(Common.readFromFile("data/1Timestamp Некорректный.sig"), false);
 
@@ -1493,7 +1465,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Входные данные не являются подписанным сообщением");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV83: Проверка некорректного Timestamp с признаком false с отчетом")
     public void verifyBadSignatureTimeStampWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyTimeStampWithReport(Common.readFromFile("data/1Timestamp Некорректный.sig"), true);
 
@@ -1502,12 +1474,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 2);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Входные данные не являются подписанным сообщением");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         //Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV84: Проверка некорректного Timestamp с признаком false с подписанным отчетом")
     public void verifyBadSignatureTimeStampWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyTimeStampWithSignedReport(Common.readFromFile("data/1Timestamp Некорректный.sig"), true);
 
@@ -1520,8 +1492,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Входные данные не являются подписанным сообщением"));
         Assert.assertTrue(report.contains("НЕ ВЕРЕН"));
         Assert.assertTrue(report.contains("93F5486B8D17F58B95F6EE2CA42F923F93BEE1998E7F41766E1A3FFA51AE872A"));
@@ -1535,7 +1507,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректный true
 
-    @Test
+    @Test (description = "GUTS-ESV85: Проверка некорректного Timestamp с признаком true")
     public void verify1BadSignatureTimeStamptrue() throws IOException {
         VerificationResult verificationResult = client.verifyTimeStamp(Common.readFromFile("data/1Timestamp Некорректный.sig"), true);
 
@@ -1545,7 +1517,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Входные данные не являются подписанным сообщением");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV86: Проверка некорректного Timestamp с признаком true с отчетом")
     public void verify1BadSignatureTimeStampWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyTimeStampWithReport(Common.readFromFile("data/1Timestamp Некорректный.sig"), true);
 
@@ -1554,12 +1526,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 2);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Входные данные не являются подписанным сообщением");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         //Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV87: Проверка некорректного Timestamp с признаком true с подписанным отчетом")
     public void verify1BadSignatureTimeStampWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyTimeStampWithSignedReport(Common.readFromFile("data/1Timestamp Некорректный.sig"), true);
 
@@ -1572,8 +1544,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Входные данные не являются подписанным сообщением"));
         Assert.assertTrue(report.contains("НЕ ВЕРЕН"));
         Assert.assertTrue(report.contains("93F5486B8D17F58B95F6EE2CA42F923F93BEE1998E7F41766E1A3FFA51AE872A"));
@@ -1589,7 +1561,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV88: Проверка корректного XAdES с признаком false")
     public void verifyXAdESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyXAdES(Common.readFromFile("data/XAdES.xml"), false);
 
@@ -1599,7 +1571,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV89: Проверка корректного XAdES с признаком false с отчетом")
     public void verifyXAdESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyXAdESWithReport(Common.readFromFile("data/XAdES.xml"), false);
 
@@ -1608,12 +1580,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV90: Проверка корректного XAdES с признаком false с подписанным отчетом")
     public void verifyXAdESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyXAdESWithSignedReport(Common.readFromFile("data/XAdES.xml"), false);
 
@@ -1626,8 +1598,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("87AFCFD8E7E0FA97DF390FF4BF3D2BF1AD2C8454841BC2E9A44941349EEEC8CE"));
@@ -1641,7 +1613,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV91: Проверка корректного XAdES с признаком true")
     public void verifyXAdEStrue() throws IOException {
         VerificationResult verificationResult = client.verifyXAdES(Common.readFromFile("data/XAdES.xml"), true);
 
@@ -1651,7 +1623,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV92: Проверка корректного XAdES с признаком true с отчетом")
     public void verify1XAdESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyXAdESWithReport(Common.readFromFile("data/XAdES.xml"), true);
 
@@ -1660,12 +1632,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV93: Проверка корректного XAdES с признаком true с подписанным отчетом")
     public void verify1XAdESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyXAdESWithSignedReport(Common.readFromFile("data/XAdES.xml"), true);
 
@@ -1678,8 +1650,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("87AFCFD8E7E0FA97DF390FF4BF3D2BF1AD2C8454841BC2E9A44941349EEEC8CE"));
@@ -1693,7 +1665,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV94: Проверка некорректного XAdES с признаком false")
     public void verifyBadSignatureXAdESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyXAdES(Common.readFromFile("data/XAdES Некорректный.xml"), false);
 
@@ -1703,7 +1675,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись недействительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV95: Проверка некорректного XAdES с признаком false с отчетом")
     public void verifyBadSignatureXAdESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyXAdESWithReport(Common.readFromFile("data/XAdES Некорректный.xml"), false);
 
@@ -1712,12 +1684,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись недействительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV96: Проверка некорректного XAdES с признаком false с подписанным отчетом")
     public void verifyBadSignatureXAdESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyXAdESWithSignedReport(Common.readFromFile("data/XAdES Некорректный.xml"), false);
 
@@ -1730,8 +1702,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись неверна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("FE449030C72DD4745BEB254541FDF504264F6BC9B64F1091F5E828EBB540065A"));
@@ -1745,7 +1717,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV97: Проверка некорректного XAdES с признаком true")
     public void verifyBadSignatureXAdEStrue() throws IOException {
         VerificationResult verificationResult = client.verifyXAdES(Common.readFromFile("data/XAdES Некорректный.xml"), true);
 
@@ -1755,7 +1727,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись недействительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV98: Проверка некорректного XAdES с признаком true с отчетом")
     public void verify1BadSignatureXAdESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyXAdESWithReport(Common.readFromFile("data/XAdES Некорректный.xml"), true);
 
@@ -1764,12 +1736,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись недействительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV99: Проверка некорректного XAdES с признаком true с подписанным отчетом")
     public void verify1BadSignatureXAdESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyXAdESWithSignedReport(Common.readFromFile("data/XAdES Некорректный.xml"), true);
 
@@ -1782,8 +1754,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись неверна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("FE449030C72DD4745BEB254541FDF504264F6BC9B64F1091F5E828EBB540065A"));
@@ -1799,7 +1771,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV100: Проверка корректного XMLDSig с признаком false")
     public void verifyXMLSignaturefalse() throws IOException {
         VerificationResult verificationResult = client.verifyXMLSignature(Common.readFromFile("data/XMLDSig.xml"), false);
 
@@ -1809,7 +1781,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV101: Проверка корректного XMLDSig с признаком false с отчетом")
     public void verifyXMLSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyXMLSignatureWithReport(Common.readFromFile("data/XMLDSig.xml"), false);
 
@@ -1818,12 +1790,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV102: Проверка корректного XMLDSig с признаком false с подписанным отчетом")
     public void verifyXMLSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyXMLSignatureWithSignedReport(Common.readFromFile("data/XMLDSig.xml"), false);
 
@@ -1836,8 +1808,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("87AFCFD8E7E0FA97DF390FF4BF3D2BF1AD2C8454841BC2E9A44941349EEEC8CE"));
@@ -1851,7 +1823,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV103: Проверка корректного XMLDSig с признаком true")
     public void verifyXMLSignaturetrue() throws IOException {
         VerificationResult verificationResult = client.verifyXMLSignature(Common.readFromFile("data/XMLDSig.xml"), true);
 
@@ -1861,7 +1833,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV104: Проверка корректного XMLDSig с признаком true с отчетом")
     public void verify1XMLSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyXMLSignatureWithReport(Common.readFromFile("data/XMLDSig.xml"), true);
 
@@ -1870,12 +1842,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV105: Проверка корректного XMLDSig с признаком true с подписанным отчетом")
     public void verify1XMLSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyXMLSignatureWithSignedReport(Common.readFromFile("data/XMLDSig.xml"), true);
 
@@ -1888,8 +1860,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("87AFCFD8E7E0FA97DF390FF4BF3D2BF1AD2C8454841BC2E9A44941349EEEC8CE"));
@@ -1903,7 +1875,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV106: Проверка некорректного XMLDSig с признаком false")
     public void verifyBadSignatureXMLSignaturefalse() throws IOException {
         VerificationResult verificationResult = client.verifyXMLSignature(Common.readFromFile("data/XMLDSig Некорректный.xml"), false);
 
@@ -1913,7 +1885,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись недействительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV107: Проверка некорректного XMLDSig с признаком false с отчетом")
     public void verifyBadSignatureXMLSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyXMLSignatureWithReport(Common.readFromFile("data/XMLDSig Некорректный.xml"), false);
 
@@ -1922,12 +1894,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись недействительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV108: Проверка некорректного XMLDSig с признаком false с подписанным отчетом")
     public void verifyBadSignatureXMLSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyXMLSignatureWithSignedReport(Common.readFromFile("data/XMLDSig Некорректный.xml"), false);
 
@@ -1940,8 +1912,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись неверна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("FE449030C72DD4745BEB254541FDF504264F6BC9B64F1091F5E828EBB540065A"));
@@ -1955,7 +1927,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV109: Проверка некорректного XMLDSig с признаком true")
     public void verifyBadSignatureXMLSignaturetrue() throws IOException {
         VerificationResult verificationResult = client.verifyXMLSignature(Common.readFromFile("data/XMLDSig Некорректный.xml"), true);
 
@@ -1965,7 +1937,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись недействительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV110: Проверка некорректного XMLDSig с признаком true с отчетом")
     public void verify1BadSignatureXMLSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyXMLSignatureWithReport(Common.readFromFile("data/XMLDSig Некорректный.xml"), true);
 
@@ -1974,12 +1946,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись недействительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV111: Проверка некорректного XMLDSig с признаком true с подписанным отчетом")
     public void verify1BadSignatureXMLSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyXMLSignatureWithSignedReport(Common.readFromFile("data/XMLDSig Некорректный.xml"), true);
 
@@ -1992,8 +1964,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись неверна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("FE449030C72DD4745BEB254541FDF504264F6BC9B64F1091F5E828EBB540065A"));
@@ -2009,7 +1981,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV112: Проверка корректного PAdES с признаком false")
     public void verifyPAdESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyPAdES(Common.readFromFile("data/PAdES.pdf"), false);
 
@@ -2019,7 +1991,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV113: Проверка корректного PAdES с признаком false с отчетом")
     public void verifyPAdESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyPAdESWithReport(Common.readFromFile("data/PAdES.pdf"), false);
 
@@ -2028,12 +2000,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV114: Проверка корректного PAdES с признаком false с подписанным отчетом")
     public void verifyPAdESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyPAdESWithSignedReport(Common.readFromFile("data/PAdES.pdf"), false);
 
@@ -2046,8 +2018,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("A8EE01D79F9C799D23758000376BAC18637C6DEFF6350178CF0144F242A3F6FD"));
@@ -2061,7 +2033,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV115: Проверка корректного PAdES с признаком true")
     public void verifyPAdEStrue() throws IOException {
         VerificationResult verificationResult = client.verifyPAdES(Common.readFromFile("data/PAdES.pdf"), true);
 
@@ -2071,7 +2043,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV116: Проверка корректного PAdES с признаком true с отчетом")
     public void verify1PAdESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyPAdESWithReport(Common.readFromFile("data/PAdES.pdf"), true);
 
@@ -2080,12 +2052,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV117: Проверка корректного PAdES с признаком true с подписанным отчетом")
     public void verify1PAdESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyPAdESWithSignedReport(Common.readFromFile("data/PAdES.pdf"), true);
 
@@ -2098,8 +2070,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("A8EE01D79F9C799D23758000376BAC18637C6DEFF6350178CF0144F242A3F6FD"));
@@ -2113,7 +2085,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV118: Проверка некорректного PAdES с признаком false")
     public void verifyBadSignaturePAdESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyPAdES(Common.readFromFile("data/PAdES Некорректный.pdf"), false);
 
@@ -2123,7 +2095,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись неверна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV119: Проверка некорректного PAdES с признаком false с отчетом")
     public void verifyBadSignaturePAdESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyPAdESWithReport(Common.readFromFile("data/PAdES Некорректный.pdf"), false);
 
@@ -2132,12 +2104,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись неверна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV120: Проверка некорректного PAdES с признаком false с подписанным отчетом")
     public void verifyBadSignaturePAdESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyPAdESWithSignedReport(Common.readFromFile("data/PAdES Некорректный.pdf"), false);
 
@@ -2150,8 +2122,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись неверна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("A4A6B771EF412CE24824822A9A5984F8EDE1360C14B1D5BDB9B11B52A4B9C823"));
@@ -2165,7 +2137,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV121: Проверка некорректного PAdES с признаком true")
     public void verifyBadSignaturePAdEStrue() throws IOException {
         VerificationResult verificationResult = client.verifyPAdES(Common.readFromFile("data/PAdES Некорректный.pdf"), true);
 
@@ -2175,7 +2147,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись неверна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV122: Проверка некорректного PAdES с признаком true с отчетом")
     public void verify1BadSignaturePAdESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyPAdESWithReport(Common.readFromFile("data/PAdES Некорректный.pdf"), true);
 
@@ -2184,12 +2156,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись неверна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV123: Проверка некорректного PAdES с признаком true с подписанным отчетом")
     public void verify1BadSignaturePAdESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyPAdESWithSignedReport(Common.readFromFile("data/PAdES Некорректный.pdf"), true);
 
@@ -2202,8 +2174,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись неверна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("A4A6B771EF412CE24824822A9A5984F8EDE1360C14B1D5BDB9B11B52A4B9C823"));
@@ -2219,7 +2191,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV124: Проверка корректного CAdES с признаком false")
     public void verifyCAdESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/CAdES.sig"), false);
 
@@ -2229,7 +2201,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV125: Проверка корректного CAdES с признаком false с отчетом")
     public void verifyCAdESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/CAdES.sig"), false);
 
@@ -2238,12 +2210,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV126: Проверка корректного CAdES с признаком false с подписанным отчетом")
     public void verifyCAdESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/CAdES.sig"), false);
 
@@ -2256,8 +2228,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("23DA65528F0E0AE171BA0D76BDFD064D1056CC598BEBB80954F3CE63161752D8"));
@@ -2271,7 +2243,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV127: Проверка корректного CAdES с признаком true")
     public void verifyCAdEStrue() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/CAdES.sig"), true);
 
@@ -2281,7 +2253,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV128: Проверка корректного CAdES с признаком true с отчетом")
     public void verify1CAdESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/CAdES.sig"), true);
 
@@ -2290,12 +2262,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV129: Проверка корректного CAdES с признаком true с подписанным отчетом")
     public void verify1CAdESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/CAdES.sig"), true);
 
@@ -2308,8 +2280,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("23DA65528F0E0AE171BA0D76BDFD064D1056CC598BEBB80954F3CE63161752D8"));
@@ -2323,7 +2295,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV130: Проверка некорректного CAdES с признаком false")
     public void verifyBadSignatureCAdESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/CAdES Некорректный.sig"), false);
 
@@ -2333,7 +2305,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись неверна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV131: Проверка некорректного CAdES с признаком false с отчетом")
     public void verifyBadSignatureCAdESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/CAdES Некорректный.sig"), false);
 
@@ -2342,12 +2314,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись неверна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV132: Проверка некорректного CAdES с признаком false с подписанным отчетом")
     public void verifyBadSignatureCAdESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/CAdES Некорректный.sig"), false);
 
@@ -2360,8 +2332,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись неверна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("A7AE8E44FB0689283D4F7F5227F6C6343FD78C6D223B91C0268E7D37B8A89806"));
@@ -2375,7 +2347,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV133: Проверка некорректного CAdES с признаком true")
     public void verifyBadSignatureCAdEStrue() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/CAdES Некорректный.sig"), true);
 
@@ -2385,7 +2357,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись неверна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV134: Проверка некорректного CAdES с признаком true с отчетом")
     public void verify1BadSignatureCAdESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/CAdES Некорректный.sig"), true);
 
@@ -2394,12 +2366,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись неверна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV135: Проверка некорректного CAdES с признаком true с подписанным отчетом")
     public void verify1BadSignatureCAdESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/CAdES Некорректный.sig"), true);
 
@@ -2412,8 +2384,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись неверна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("A7AE8E44FB0689283D4F7F5227F6C6343FD78C6D223B91C0268E7D37B8A89806"));
@@ -2429,7 +2401,7 @@ public class SimpleTests extends TestBase {
 
     //Корректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV136: Проверка корректного CAdES-A CAdES-BES с признаком false")
     public void verifyCAdESBESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A CAdES-BES.sig"), false);
 
@@ -2439,7 +2411,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV137: Проверка корректного CAdES-A CAdES-BES с признаком false с отчетом")
         public void verifyCAdESBESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A CAdES-BES.sig"), false);
 
@@ -2448,12 +2420,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV138: Проверка корректного CAdES-A CAdES-BES с признаком false с подписанным отчетом")
     public void verifyCAdESBESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A CAdES-BES.sig"), false);
 
@@ -2466,8 +2438,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -2483,7 +2455,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV139: Проверка корректного CAdES-A CAdES-BES с признаком true")
     public void verify1CAdESBESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A CAdES-BES.sig"), true);
 
@@ -2493,7 +2465,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV140: Проверка корректного CAdES-A CAdES-BES с признаком true с отчетом")
     public void verify1CAdESBESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A CAdES-BES.sig"), true);
 
@@ -2502,12 +2474,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV141: Проверка корректного CAdES-A CAdES-BES с признаком true с подписанным отчетом")
     public void verify1CAdESBESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A CAdES-BES.sig"), true);
 
@@ -2520,8 +2492,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -2537,7 +2509,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV142: Проверка некорректного CAdES-A CAdES-BES с признаком false")
     public void verifyBadSignatureCAdESBESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A Некорректная подпись CAdES-BES.sig"), false);
 
@@ -2547,7 +2519,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись неверна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV143: Проверка некорректного CAdES-A CAdES-BES с признаком false с отчетом")
     public void verifyBadSignatureCAdESBESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A Некорректная подпись CAdES-BES.sig"), false);
 
@@ -2556,13 +2528,13 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись неверна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("Электронная подпись неверна"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
         Assert.assertTrue(report.contains("Сообщение содержит неверную подпись"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV144: Проверка некорректного CAdES-A CAdES-BES с признаком false с подписанным отчетом")
     public void verifyBadSignatureCAdESBESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A Некорректная подпись CAdES-BES.sig"), false);
 
@@ -2575,8 +2547,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -2592,7 +2564,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV145: Проверка некорректного CAdES-A CAdES-BES с признаком true")
     public void verify1BadSignatureCAdESBESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A Некорректная подпись CAdES-BES.sig"), true);
 
@@ -2602,7 +2574,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись неверна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV146: Проверка некорректного CAdES-A CAdES-BES с признаком true с отчетом")
     public void verify1BadSignatureCAdESBESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A Некорректная подпись CAdES-BES.sig"), true);
 
@@ -2611,13 +2583,13 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись неверна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
         Assert.assertTrue(report.contains("Сообщение содержит неверную подпись"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV147: Проверка некорректного CAdES-A CAdES-BES с признаком true с подписанным отчетом")
     public void verify1BadSignatureCAdESBESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A Некорректная подпись CAdES-BES.sig"), true);
 
@@ -2630,8 +2602,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -2649,7 +2621,7 @@ public class SimpleTests extends TestBase {
 
     //Корректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV148: Проверка корректного CAdES-A CAdES-XL 2ATSv3 с признаком false")
     public void verifyCAdESATSv3false() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A CAdES-XL 2ATSv3.sig"), false);
 
@@ -2659,7 +2631,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV149: Проверка корректного CAdES-A CAdES-XL 2ATSv3 с признаком false с отчетом")
     public void verifyCAdESATSv3WithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A CAdES-XL 2ATSv3.sig"), false);
 
@@ -2668,12 +2640,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV150: Проверка корректного CAdES-A CAdES-XL 2ATSv3 с признаком false с подписанным отчетом")
     public void verifyCAdESATSv3WithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A CAdES-XL 2ATSv3.sig"), false);
 
@@ -2686,8 +2658,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -2704,7 +2676,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV151: Проверка корректного CAdES-A CAdES-XL 2ATSv3 с признаком true")
     public void verify1CAdESATSv3false() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A CAdES-XL 2ATSv3.sig"), true);
 
@@ -2714,7 +2686,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV152: Проверка корректного CAdES-A CAdES-XL 2ATSv3 с признаком true с отчетом")
     public void verify1CAdESATSv3WithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A CAdES-XL 2ATSv3.sig"), true);
 
@@ -2723,12 +2695,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV153: Проверка корректного CAdES-A CAdES-XL 2ATSv3 с признаком true с подписанным отчетом")
     public void verify1CAdESATSv3WithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A CAdES-XL 2ATSv3.sig"), true);
 
@@ -2741,8 +2713,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -2759,7 +2731,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV154: Проверка некорректного CAdES-A CAdES-XL 2ATSv3 с признаком false")
     public void verifyBadSignatureCAdESATSv3false() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A Некорректная подпись CAdES-XL 2ATSv3.sig"), false);
 
@@ -2769,7 +2741,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись неверна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV155: Проверка некорректного CAdES-A CAdES-XL 2ATSv3 с признаком false с отчетом")
     public void verifyBadSignatureCAdESATSv3WithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A Некорректная подпись CAdES-XL 2ATSv3.sig"), false);
 
@@ -2778,13 +2750,13 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись неверна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("Сообщение содержит неверную подпись"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV156: Проверка некорректного CAdES-A CAdES-XL 2ATSv3 с признаком false с подписанным отчетом")
     public void verifyBadSignatureCAdESATSv3WithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A Некорректная подпись CAdES-XL 2ATSv3.sig"), false);
 
@@ -2797,8 +2769,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Действителен"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -2815,7 +2787,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV157: Проверка некорректного CAdES-A CAdES-XL 2ATSv3 с признаком true")
     public void verify1BadSignatureCAdESATSv3false() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A Некорректная подпись CAdES-XL 2ATSv3.sig"), true);
 
@@ -2825,7 +2797,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись неверна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV158: Проверка некорректного CAdES-A CAdES-XL 2ATSv3 с признаком true с отчетом")
     public void verify1BadSignatureCAdESATSv3WithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A Некорректная подпись CAdES-XL 2ATSv3.sig"), true);
 
@@ -2834,12 +2806,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись неверна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV159: Проверка некорректного CAdES-A CAdES-XL 2ATSv3 с признаком true с подписанным отчетом")
     public void verify1BadSignatureCAdESATSv3WithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/Тестирование ИС ГУЦ КриптоПро CAdES-A Некорректная подпись CAdES-XL 2ATSv3.sig"), true);
 
@@ -2852,8 +2824,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -2867,12 +2839,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getCode(), 0);
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
-/*
-//CAdES-A Revoked ATSv3
+
+//CAdES-A Revoked ATSv3 Необходимо актуализировать с новыми сертификатами
 
     //Корректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV160: Проверка CAdES-A, Revoked с признаком false")
     public void verifyRevokedCAdESBESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/CAdES-BES Корректная основная подпись Revoked ATS.sig"), false);
 
@@ -2882,7 +2854,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Сертификат подписи недействителен");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV161: Проверка CAdES-A, Revoked с признаком false с отчетом")
     public void verifyRevokedCAdESBESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/CAdES-BES Корректная основная подпись Revoked ATS.sig"), false);
 
@@ -2891,12 +2863,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 13);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Сертификат подписи недействителен");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Один из сертификатов цепочки аннулирован"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV162: Проверка CAdES-A, Revoked с признаком false с подписанным отчетом")
     public void verifyRevokedCAdESBESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/CAdES-BES Корректная основная подпись Revoked ATS.sig"), false);
 
@@ -2909,8 +2881,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Один из сертификатов цепочки аннулирован"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -2926,7 +2898,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV163: Проверка CAdES-A, Revoked с признаком true")
     public void verify1RevokedCAdESBESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/CAdES-BES Корректная основная подпись Revoked ATS.sig"), true);
 
@@ -2936,7 +2908,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV164: Проверка CAdES-A, Revoked с признаком true с отчетом")
     public void verify1RevokedCAdESBESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/CAdES-BES Корректная основная подпись Revoked ATS.sig"), true);
 
@@ -2945,12 +2917,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV165: Проверка CAdES-A, Revoked с признаком true с подписанным отчетом")
     public void verify1RevokedCAdESBESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/CAdES-BES Корректная основная подпись Revoked ATS.sig"), true);
 
@@ -2963,8 +2935,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -2972,15 +2944,15 @@ public class SimpleTests extends TestBase {
         Assert.assertTrue(report.contains("586EC868A8665421D3DC7C82393338F2126B48D140C5AA518923DF7A8C15E73D"));
 
         VerificationResult verificationResult = client.verifyCMSSignatureDetached(signatureBytes, reportBytes, true);
-        logger.info("code: " + verificationResult.getCode());
-        logger.info("desc: " + verificationResult.getDescription());
+        logger.trace("code: " + verificationResult.getCode());
+        logger.trace("desc: " + verificationResult.getDescription());
         Assert.assertEquals(verificationResult.getCode(), 0);
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
 //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV166: Проверка некорректного CAdES-A, Revoked с признаком false")
     public void verifyBadSignatureRevokedCAdESBESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/CAdES-BES Некорректная основная подпись Revoked ATS.sig"), false);
 
@@ -2990,7 +2962,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Внутренняя ошибка");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV167: Проверка некорректного CAdES-A, Revoked с признаком false с отчетом")
     public void verifyBadSignatureRevokedCAdESBESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/CAdES-BES Некорректная основная подпись Revoked ATS.sig"), false);
 
@@ -2999,13 +2971,13 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 1);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Внутренняя ошибка");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
         Assert.assertTrue(report.contains("The hash value is not correct"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV168: Проверка некорректного CAdES-A, Revoked с признаком false с подписанным отчетом")
     public void verifyBadSignatureRevokedCAdESBESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/CAdES-BES Некорректная основная подпись Revoked ATS.sig"), false);
 
@@ -3018,8 +2990,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Внутренняя ошибка"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -3027,15 +2999,15 @@ public class SimpleTests extends TestBase {
         Assert.assertTrue(report.contains("355D5C825BFEB2071C4256A558B6A133213FF2B782D16FAB825394989C393F4B"));
 
         VerificationResult verificationResult = client.verifyCMSSignatureDetached(signatureBytes, reportBytes, true);
-        logger.info("code: " + verificationResult.getCode());
-        logger.info("desc: " + verificationResult.getDescription());
+        logger.trace("code: " + verificationResult.getCode());
+        logger.trace("desc: " + verificationResult.getDescription());
         Assert.assertEquals(verificationResult.getCode(), 0);
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV169: Проверка некорректного CAdES-A, Revoked с признаком true")
     public void verify1BadSignatureRevokedCAdESBESfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/CAdES-BES Некорректная основная подпись Revoked ATS.sig"), true);
 
@@ -3045,7 +3017,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Внутренняя ошибка");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV170: Проверка некорректного CAdES-A, Revoked с признаком true с отчетом")
     public void verify1BadSignatureRevokedCAdESBESWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/CAdES-BES Некорректная основная подпись Revoked ATS.sig"), true);
 
@@ -3054,12 +3026,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 1);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Внутренняя ошибка");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV171: Проверка некорректного CAdES-A, Revoked с признаком true с отчетом")
     public void verify1BadSignatureRevokedCAdESBESWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/CAdES-BES Некорректная основная подпись Revoked ATS.sig"), true);
 
@@ -3072,8 +3044,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -3086,13 +3058,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getCode(), 0);
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
-*/
 
 //CAdES-XL
 
     //Корректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV172: Проверка корректного CAdES-A CAdES-XL с признаком false")
     public void verifyCAdESXLfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/CAdES-XL КриптоПро Корректная основная подпись.sig"), false);
 
@@ -3102,7 +3073,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV173: Проверка корректного CAdES-A CAdES-XL с признаком false с отчетом")
     public void verifyCAdESXLWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/CAdES-XL КриптоПро Корректная основная подпись.sig"), false);
 
@@ -3111,12 +3082,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV174: Проверка корректного CAdES-A CAdES-XL с признаком false с подписанным отчетом")
     public void verifyCAdESXLWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/CAdES-XL КриптоПро Корректная основная подпись.sig"), false);
 
@@ -3129,8 +3100,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -3146,7 +3117,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV175: Проверка корректного CAdES-A CAdES-XL с признаком true")
     public void verify1CAdESXLfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/CAdES-XL КриптоПро Корректная основная подпись.sig"), true);
 
@@ -3156,7 +3127,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV176: Проверка корректного CAdES-A CAdES-XL с признаком true с отчетом")
     public void verify1CAdESXLWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/CAdES-XL КриптоПро Корректная основная подпись.sig"), true);
 
@@ -3165,12 +3136,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV177: Проверка корректного CAdES-A CAdES-XL с признаком true с подписанным отчетом")
     public void verify1CAdESXLWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/CAdES-XL КриптоПро Корректная основная подпись.sig"), true);
 
@@ -3183,8 +3154,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -3200,7 +3171,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV178: Проверка некорректного CAdES-A CAdES-XL с признаком false")
     public void verifyBadSignatureCAdESXLfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/CAdES-XL КриптоПро Некорректная основная подпись.sig"), false);
 
@@ -3210,7 +3181,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись неверна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV179: Проверка некорректного CAdES-A CAdES-XL с признаком false с отчетом")
     public void verifyBadSignatureCAdESXLWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/CAdES-XL КриптоПро Некорректная основная подпись.sig"), false);
 
@@ -3219,13 +3190,13 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись неверна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
         Assert.assertTrue(report.contains("Электронная подпись неверна"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV180: Проверка некорректного CAdES-A CAdES-XL с признаком false с подписанным отчетом")
     public void verifyBadSignatureCAdESXLWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/CAdES-XL КриптоПро Некорректная основная подпись.sig"), false);
 
@@ -3238,8 +3209,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         //Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -3255,7 +3226,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV181: Проверка некорректного CAdES-A CAdES-XL с признаком true")
     public void verify1BadSignatureCAdESXLfalse() throws IOException {
         VerificationResult verificationResult = client.verifyCAdES(Common.readFromFile("data/CAdES-XL КриптоПро Некорректная основная подпись.sig"), true);
 
@@ -3265,7 +3236,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись неверна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV182: Проверка некорректного CAdES-A CAdES-XL с признаком true с отчетом")
     public void verify1BadSignatureCAdESXLWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCAdESWithReport(Common.readFromFile("data/CAdES-XL КриптоПро Некорректная основная подпись.sig"), true);
 
@@ -3274,12 +3245,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись неверна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV183: Проверка некорректного CAdES-A CAdES-XL с признаком true с подписанным отчетом")
     public void verify1BadSignatureCAdESXLWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyCAdESWithSignedReport(Common.readFromFile("data/CAdES-XL КриптоПро Некорректная основная подпись.sig"), true);
 
@@ -3292,8 +3263,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("Найден корректный атрибут CAdES-A v3"));
@@ -3311,7 +3282,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV184: Проверка корректного WS-Security с признаком false")
     public void verifyWSSSignaturefalse() throws IOException {
         VerificationResult verificationResult = client.verifyWSSSignature(Common.readFromFile("data/WS-Security.xml"), false);
 
@@ -3321,7 +3292,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV185: Проверка корректного WS-Security с признаком false с отчетом")
     public void verifyWSSSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyWSSSignatureWithReport(Common.readFromFile("data/WS-Security.xml"), false);
 
@@ -3330,12 +3301,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV186: Проверка корректного WS-Security с признаком false с подписанным отчетом")
     public void verifyWSSSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyWSSSignatureWithSignedReport(Common.readFromFile("data/WS-Security.xml"), false);
 
@@ -3348,8 +3319,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
         Assert.assertTrue(report.contains("2D42DCF4E6F7623E4CAF2F35FA9C1D953F7AB2A98EBFDEAA8A626F696D73AA1E"));
@@ -3363,7 +3334,7 @@ public class SimpleTests extends TestBase {
 
 //Корректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV187: Проверка корректного WS-Security с признаком true")
     public void verifyWSSSignaturetrue() throws IOException {
         VerificationResult verificationResult = client.verifyWSSSignature(Common.readFromFile("data/WS-Security.xml"), true);
 
@@ -3373,7 +3344,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV188: Проверка корректного WS-Security с признаком true с отчетом")
     public void verify1WSSSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyWSSSignatureWithReport(Common.readFromFile("data/WS-Security.xml"), true);
 
@@ -3382,51 +3353,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    /*@Test
-    public void verifyWSSSignatureWithReport() throws IOException, Base64DecodingException {
-        VerificationResultWithReport verificationResultWithReport = client.verifyWSSSignatureWithReport(Common.readFromFile("data/WS-Security.xml"), false);
-
-        logger.info("code: " + verificationResultWithReport.getCode());
-        logger.info("desc: " + verificationResultWithReport.getDescription());
-        Assert.assertEquals(verificationResultWithReport.getCode(), 0);
-        Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
-        String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
-        Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
-        Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
-    }*/
-
-    /*@Test
-    public void verifyWSSSignatureWithSignedReport() throws IOException, Base64DecodingException {
-        VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyWSSSignatureWithSignedReport(Common.readFromFile("data/WS-Security.xml"), false);
-
-        logger.info("code: " + verificationResultWithSignedReport.getCode());
-        logger.info("desc: " + verificationResultWithSignedReport.getDescription());
-        Assert.assertEquals(verificationResultWithSignedReport.getCode(), 0);
-        Assert.assertEquals(verificationResultWithSignedReport.getDescription(), "Электронная подпись действительна");
-        byte[] reportBytes = verificationResultWithSignedReport.getReport();
-        byte[] signatureBytes = verificationResultWithSignedReport.getSignature();
-        String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
-        String signature = StringUtils.newStringUtf8(signatureBytes);
-
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
-        Assert.assertTrue(report.contains("Электронная подпись верна"));
-        Assert.assertTrue(report.contains("Не проверялся"));
-
-        VerificationResult verificationResult = client.verifyCMSSignatureDetached(signatureBytes, reportBytes, true);
-        logger.info("code: " + verificationResult.getCode());
-        logger.info("desc: " + verificationResult.getDescription());
-        Assert.assertEquals(verificationResult.getCode(), 0);
-        Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
-    }*/
-
-    @Test
+    @Test (description = "GUTS-ESV189: Проверка корректного WS-Security с признаком true с подписанным отчетом")
     public void verify1WSSSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyWSSSignatureWithSignedReport(Common.readFromFile("data/WS-Security.xml"), true);
 
@@ -3439,8 +3371,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись верна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("2D42DCF4E6F7623E4CAF2F35FA9C1D953F7AB2A98EBFDEAA8A626F696D73AA1E"));
@@ -3452,19 +3384,9 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    /*@Test
-    public void verifyWSSSignaturetrue() throws IOException {
-        VerificationResult verificationResult = client.verifyWSSSignature(Common.readFromFile("data/WS-Security.xml"), true);
-
-        logger.info("code: " + verificationResult.getCode());
-        logger.info("desc: " + verificationResult.getDescription());
-        Assert.assertEquals(verificationResult.getCode(), 0);
-        Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
-    }*/
-
 //Некорректная подпись false
 
-    @Test
+    @Test (description = "GUTS-ESV190: Проверка некорректного WS-Security с признаком false")
     public void verifyBadSignatureWSSSignaturefalse() throws IOException {
         VerificationResult verificationResult = client.verifyWSSSignature(Common.readFromFile("data/WS-Security Некорректный.xml"), false);
 
@@ -3474,7 +3396,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись недействительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV191: Проверка некорректного WS-Security с признаком false с отчетом")
     public void verifyBadSignatureWSSSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyWSSSignatureWithReport(Common.readFromFile("data/WS-Security Некорректный.xml"), false);
 
@@ -3483,12 +3405,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись недействительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV192: Проверка некорректного WS-Security с признаком false с подписанным отчетом")
     public void verifyBadSignatureWSSSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyWSSSignatureWithSignedReport(Common.readFromFile("data/WS-Security Некорректный.xml"), true);
 
@@ -3501,8 +3423,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись неверна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("4AF73AA6295B909FCDFEC77E69391DAD9073067E083A5EC3CEB08773C6A37DAF"));
@@ -3516,7 +3438,7 @@ public class SimpleTests extends TestBase {
 
 //Некорректная подпись true
 
-    @Test
+    @Test (description = "GUTS-ESV193: Проверка некорректного WS-Security с признаком true")
     public void verifyBadSignatureWSSSignaturetrue() throws IOException {
         VerificationResult verificationResult = client.verifyWSSSignature(Common.readFromFile("data/WS-Security Некорректный.xml"), true);
 
@@ -3526,7 +3448,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись недействительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV194: Проверка некорректного WS-Security с признаком true с отчетом")
     public void verify1BadSignatureWSSSignatureWithReport() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyWSSSignatureWithReport(Common.readFromFile("data/WS-Security Некорректный.xml"), true);
 
@@ -3535,12 +3457,12 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 3);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись недействительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись НЕДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("CertStatus=\"Не проверялся"));
     }
 
-    @Test
+    @Test (description = "GUTS-ESV195: Проверка некорректного WS-Security с признаком true с подписанным отчетом")
     public void verify1BadSignatureWSSSignatureWithSignedReport() throws IOException, Base64DecodingException {
         VerificationResultWithSignedReport verificationResultWithSignedReport = client.verifyWSSSignatureWithSignedReport(Common.readFromFile("data/WS-Security Некорректный.xml"), true);
 
@@ -3553,8 +3475,8 @@ public class SimpleTests extends TestBase {
         String report = StringUtils.newStringUtf8(verificationResultWithSignedReport.getReport());
         String signature = StringUtils.newStringUtf8(signatureBytes);
 
-        logger.info("repstr: " + report);
-        logger.info("signstr: " + signature);
+        logger.trace("repstr: " + report);
+        logger.trace("signstr: " + signature);
         Assert.assertTrue(report.contains("Электронная подпись неверна"));
         Assert.assertTrue(report.contains("Не проверялся"));
         Assert.assertTrue(report.contains("4AF73AA6295B909FCDFEC77E69391DAD9073067E083A5EC3CEB08773C6A37DAF"));
@@ -3566,7 +3488,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
 
-    @Test
+    @Test (description = "GUTS-ESV196: Проверка некорректного WS-Security с признаком true")
     public void verifyCMSwithReportfalse() throws IOException, Base64DecodingException {
         VerificationResultWithReport verificationResultWithReport = client.verifyCMSSignatureWithReport(Common.readFromFile("data/CMS.sig"), false);
 
@@ -3575,7 +3497,7 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResultWithReport.getCode(), 0);
         Assert.assertEquals(verificationResultWithReport.getDescription(), "Электронная подпись действительна");
         String report = StringUtils.newStringUtf8(verificationResultWithReport.getReport());
-        logger.info("repstr: " + report);
+        logger.trace("repstr: " + report);
         Assert.assertTrue(report.contains("ResultText=\"Подпись ДЕЙСТВИТЕЛЬНА"));
         Assert.assertTrue(report.contains("ДЕЙСТВИТЕЛЕН, сертификат выдан аккредитованным удостоверяющим центром"));
 
