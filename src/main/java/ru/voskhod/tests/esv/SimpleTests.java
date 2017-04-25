@@ -3,9 +3,7 @@ package ru.voskhod.tests.esv;
 
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.xml.security.*;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import ru.rt.server.esv.VerificationResult;
 import ru.rt.server.esv.VerificationResultWithReport;
