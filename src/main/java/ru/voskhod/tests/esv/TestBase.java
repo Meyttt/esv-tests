@@ -18,11 +18,17 @@ public class TestBase {
 
     public Config config;
 
-    @BeforeClass
-    public void initTestData() throws IOException, SAXException {
-        config = new Config(System.getProperty("config.properties.file"));
-        //setHTTPLogging();
+    public TestBase() throws IOException {
+        String a = System.getProperty("config.properties.file");
+        this.config =  new Config("config.properties");
     }
+
+
+//    @BeforeClass
+//    public void initTestData() throws IOException, SAXException {
+//        config =new Config(System.getProperty("config.properties.file"));
+//        //setHTTPLogging();
+//    }
 
     private void setHTTPLogging() {
         System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
