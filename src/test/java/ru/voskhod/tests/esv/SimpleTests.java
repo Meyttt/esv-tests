@@ -4,28 +4,41 @@ package ru.voskhod.tests.esv;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.log4j.Logger;
 import org.testng.Assert;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import ru.rt.server.esv.VerificationResult;
 import ru.rt.server.esv.VerificationResultWithReport;
 import ru.rt.server.esv.VerificationResultWithSignedReport;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Date;
 
 
 public class SimpleTests extends TestBase {
 
     private static Logger logger = Logger.getLogger(TestBase.class);
     private Client client;
+    static boolean fail = false;
 
-
-    public SimpleTests() throws  IOException {
-        client=new Client(config);;
+    public SimpleTests() throws IOException {
     }
 
-//    @BeforeClass
-//    public void initClient() throws MalformedURLException {
-//        client =
+
+//    public SimpleTests() throws  IOException {
+//        client=new Client(config);
 //    }
+
+    @BeforeClass
+    public void initClient() throws MalformedURLException {
+        client=new Client(config);
+        logger.info("Проверка сервиса проверки подписей от "+ new Date());
+    }
 
                                                             /* Certificate */
 //Корректный сертификат
@@ -849,6 +862,25 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getCode(), 0);
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
+    @AfterMethod(alwaysRun = true)
+    public static void setRes(ITestResult testResult){
+        if (!testResult.isSuccess()){
+            fail = true;
+        }
+    }
+    @AfterClass
+    public static void writeResult() throws IOException {
+        File log = new File(new File(".").getAbsolutePath()+"\\..\\"+"log.txt");
+        FileWriter fileWriter = new FileWriter(log,true);
+        if(fail){
+            fileWriter.append("Проверка сервиса проверки подписей провалена\r\n");
+        }else {
+            fileWriter.append("Проверка сервиса проверки подписей прошла успешно\r\n");
+
+        }
+        fileWriter.flush();
+    }
+
 
 }
 
