@@ -653,6 +653,16 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getCode(), 0);
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
+    @Test (description = "GUTS-ESV: Проверка корректного XMLDSig с признаком false")
+    public void verifyXMLSignaturefalse() throws IOException {
+        VerificationResult verificationResult = client.verifyXMLSignature(Common.readFromFile("data/XMLDSig.xml"), false);
+
+        logger.info("code: " + verificationResult.getCode());
+        logger.info("desc: " + verificationResult.getDescription());
+        Assert.assertEquals(verificationResult.getCode(), 0);
+        Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
+    }
+
 
 //Корректная подпись true
 
@@ -705,6 +715,8 @@ public class SimpleTests extends TestBase {
         Assert.assertEquals(verificationResult.getCode(), 0);
         Assert.assertEquals(verificationResult.getDescription(), "Электронная подпись действительна");
     }
+
+
 
 //Некорректная подпись false
 

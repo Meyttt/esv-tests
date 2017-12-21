@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            <SignatureMethod Algorithm="urn:ietf:params:xml:ns:cpxmlsec:algorithms:gostr34102001-gostr3411"/>
+            <Reference URI="">
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                    <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                </Transforms>
+                <DigestMethod Algorithm="urn:ietf:params:xml:ns:cpxmlsec:algorithms:gostr3411"/>
+                <DigestValue>cMJXQoWXDQ31/J0rXndYz5yrhkiy4EGErJ82ORdT+NQ=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>Lu26mrAjMLATT2iJEZXa58biKHN527i3XHIdZMwU4unITcKQvJ+jmYxtaCYluB0eQSo8O662Lt0GdDzEeSyzEg==
+        </SignatureValue>
+        <KeyInfo>
+            <X509Data>
+                <X509Certificate>
+                    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
+                </X509Certificate>
+            </X509Data>
+        </KeyInfo>
+    </Signature>
+    <env:Header>
+        <req:PacketInfo xmlns:req="http://www.minprom.gov.ru/schemas/2016/Request">
+            <req:Version>3.0.0.0</req:Version>
+            <req:CreateDate>2017-05-19</req:CreateDate>
+        </req:PacketInfo>
+    </env:Header>
+    <env:Body>
+        <refd:Requests xmlns:refd="http://www.minprom.gov.ru/schemas/2016/Request">
+            <refd:Request>
+                <refd:CNCategoryCode>284</refd:CNCategoryCode>
+                <refd:CNCategoryName>Сосна обыкновенная, вывозимая во все страны кроме ЕС</refd:CNCategoryName>
+                <refd:RequestNo>99283</refd:RequestNo>
+                <refd:CreateDate>2017-05-18</refd:CreateDate>
+                <refd:DateFrom>2017-05-19</refd:DateFrom>
+                <refd:DateTo>2017-12-31</refd:DateTo>
+                <refd:LicType>Разовая</refd:LicType>
+                <refd:LicOperation>Экспорт</refd:LicOperation>
+                <refd:ContractNo>YHMY-2017-0103</refd:ContractNo>
+                <refd:ContractDate>2017-04-27</refd:ContractDate>
+                <refd:HolderFullName>Общество с ограниченной ответственностью "ТБК-Промлес"</refd:HolderFullName>
+                <refd:HolderIPFIO></refd:HolderIPFIO>
+                <refd:HolderINN>2466219345</refd:HolderINN>
+                <refd:HolderJuridicalAddress>660049, Г. КРАСНОЯРСК, УЛ. КАРЛА МАРКСА, д. 44 "А", помещение 10
+                </refd:HolderJuridicalAddress>
+                <refd:HolderPasportSerialIP></refd:HolderPasportSerialIP>
+                <refd:HolderPasportNumberIP></refd:HolderPasportNumberIP>
+                <refd:HolderPasportAuthorityIP></refd:HolderPasportAuthorityIP>
+                <refd:HolderChiefPersonFIO>Зайцев Сергей Геннадьевич</refd:HolderChiefPersonFIO>
+                <refd:HolderChiefPersonPost>ГЕНЕРАЛЬНЫЙ ДИРЕКТОР</refd:HolderChiefPersonPost>
+                <refd:HolderChiefPersonPhone>2918825</refd:HolderChiefPersonPhone>
+                <refd:DealerName>Эрляньхотская деревянная компания "Юань Хэн" с ограниченной ответственностью
+                </refd:DealerName>
+                <refd:DealerAddress>КНР,011100, г. Эрляньхот, ул. SHENMU, №1</refd:DealerAddress>
+                <refd:CountryName7>КИТАЙ</refd:CountryName7>
+                <refd:CountryAlpha27>CN</refd:CountryAlpha27>
+                <refd:DealerCountryName>КИТАЙ</refd:DealerCountryName>
+                <refd:DealerCountryAlpha2>CN</refd:DealerCountryAlpha2>
+                <refd:ContractCurrencyCode>643</refd:ContractCurrencyCode>
+                <refd:ContractCurrencyName>РОССИЙСКИЙ РУБЛЬ</refd:ContractCurrencyName>
+                <refd:CurrencyCost>10000000.00000</refd:CurrencyCost>
+                <refd:StatCost>177579.00000</refd:StatCost>
+                <refd:OriginCountryName>РОССИЯ</refd:OriginCountryName>
+                <refd:OriginCountryAlpha2>RU</refd:OriginCountryAlpha2>
+                <refd:Quantity>2000.0000000</refd:Quantity>
+                <refd:MeasureName>M3</refd:MeasureName>
+                <refd:MeasureCode>113</refd:MeasureCode>
+                <refd:AddQuantity>0.0000000</refd:AddQuantity>
+                <refd:AddMeasureName></refd:AddMeasureName>
+                <refd:CNCode>4403211100</refd:CNCode>
+                <refd:CNDescription>БРЕВНА ИЗ СОСНЫ (PINUS SPP.) ОБЫКНОВЕННОЙ ВИДА "PINUS SYLVESTRIS L.":, С РАЗМЕРОМ
+                    НАИБОЛЬШЕГО ПОПЕРЕЧНОГО СЕЧЕНИЯ 15 СМ ИЛИ БОЛЕЕ. ГОСТ 9463-88, сорт 1-2, длина 4-12м.
+                </refd:CNDescription>
+                <refd:AddInfo>ПРИЛОЖЕНИЕ № 1 ОТ 27.04.2017г., ПРИЛОЖЕНИЕ № 2 ОТ 27.04.2017г., К КОНТРАКТУ №
+                    YHMY-2017-0103 ОТ 27.04.2017.
+
+                    СТАТИСТИЧЕСКАЯ СТОИМОСТЬ РАСCЧИТАНА ПО КУРСУ ЦБ РФ (1 ДОЛЛАР США 56,3131 РУБ.) НА 27.04.2017г.
+                </refd:AddInfo>
+                <refd:UIN>02024662193450992834</refd:UIN>
+                <refd:Reason>
+                    <refd:Document xmlns:refd="http://www.minprom.gov.ru/schemas/2016/Request">
+                        <refd:DocCode>Документ, подтверждающий оплату госпошлины</refd:DocCode>
+                        <refd:Authority>Заявитель</refd:Authority>
+                        <refd:DocName>Копия платежного поручения</refd:DocName>
+                        <refd:DocNo></refd:DocNo>
+                        <refd:ResolvedQuantity>0.0000000</refd:ResolvedQuantity>
+                        <refd:Pages>1</refd:Pages>
+                        <refd:AddInfo></refd:AddInfo>
+                        <refd:FileName>платежное поручение9 001.jpg</refd:FileName>
+                        <refd:FileID>FEBEDA80-1739-4AE6-AAA2-48B345AC93A3</refd:FileID>
+                        <refd:FileHash>MD5#vza/Yt5mDWyG6GKGWSGyLQ==</refd:FileHash>
+                        <refd:IsAttach>1</refd:IsAttach>
+                    </refd:Document>
+                    <refd:Document xmlns:refd="http://www.minprom.gov.ru/schemas/2016/Request">
+                        <refd:DocCode>Прочее</refd:DocCode>
+                        <refd:Authority>Российский экспортный центр</refd:Authority>
+                        <refd:DocName>Заключение Российского экспортного центра</refd:DocName>
+                        <refd:DocNo>143</refd:DocNo>
+                        <refd:DocDate>2017-05-19</refd:DocDate>
+                        <refd:Pages>1</refd:Pages>
+                        <refd:AddInfo></refd:AddInfo>
+                        <refd:FileName>Заключение 99283.pdf</refd:FileName>
+                        <refd:FileID>91209C65-ECDB-46D4-9A0F-3E9E4471BD7E</refd:FileID>
+                        <refd:FileHash>MD5#OlwVEvEzRhUEPswr5cXZaQ==</refd:FileHash>
+                        <refd:IsAttach>1</refd:IsAttach>
+                    </refd:Document>
+                    <refd:Document xmlns:refd="http://www.minprom.gov.ru/schemas/2016/Request">
+                        <refd:DocCode>Сведения о постановке на учет в налоговом органе</refd:DocCode>
+                        <refd:Authority>Федеральная налоговая служба</refd:Authority>
+                        <refd:DocName>Копия Свидетельства о постановке на учет в налоговом органе</refd:DocName>
+                        <refd:DocNo></refd:DocNo>
+                        <refd:ResolvedQuantity>0.0000000</refd:ResolvedQuantity>
+                        <refd:Pages>1</refd:Pages>
+                        <refd:AddInfo></refd:AddInfo>
+                        <refd:FileName>свидетельство о постановке на учет 001.jpg</refd:FileName>
+                        <refd:FileID>27FD7003-EB27-4925-8F3A-541727427BE6</refd:FileID>
+                        <refd:FileHash>MD5#tIzYQUTaUSMmCjkYu5UPnQ==</refd:FileHash>
+                        <refd:IsAttach>1</refd:IsAttach>
+                    </refd:Document>
+                    <refd:Document xmlns:refd="http://www.minprom.gov.ru/schemas/2016/Request">
+                        <refd:DocCode>Прочее</refd:DocCode>
+                        <refd:Authority>Заявитель</refd:Authority>
+                        <refd:DocName>Сопроводительное письмо</refd:DocName>
+                        <refd:DocNo>11</refd:DocNo>
+                        <refd:DocDate>2017-05-18</refd:DocDate>
+                        <refd:ResolvedQuantity>0.0000000</refd:ResolvedQuantity>
+                        <refd:Pages>3</refd:Pages>
+                        <refd:AddInfo></refd:AddInfo>
+                        <refd:FileName>сопроводительное 001.jpg</refd:FileName>
+                        <refd:FileID>47F20618-0880-4874-AA68-886FA2E44EBE</refd:FileID>
+                        <refd:FileHash>MD5#i7DYJfiZOxoWPdXtyYi6ew==</refd:FileHash>
+                        <refd:IsAttach>1</refd:IsAttach>
+                    </refd:Document>
+                    <refd:Document xmlns:refd="http://www.minprom.gov.ru/schemas/2016/Request">
+                        <refd:DocCode>Нормативный документ</refd:DocCode>
+                        <refd:Authority>Евразийская экономическая комиссия</refd:Authority>
+                        <refd:DocName>Решение Коллегии Евразийской экономической комиссии</refd:DocName>
+                        <refd:DocNo>134</refd:DocNo>
+                        <refd:DocDate>2012-08-16</refd:DocDate>
+                        <refd:ResolvedQuantity>0.0000000</refd:ResolvedQuantity>
+                        <refd:Pages>0</refd:Pages>
+                        <refd:AddInfo></refd:AddInfo>
+                        <refd:IsAttach>0</refd:IsAttach>
+                    </refd:Document>
+                    <refd:Document xmlns:refd="http://www.minprom.gov.ru/schemas/2016/Request">
+                        <refd:DocCode>Нормативный документ</refd:DocCode>
+                        <refd:Authority>Правительство Российской Федерации</refd:Authority>
+                        <refd:DocName>Постановление Правительства Российской Федерации</refd:DocName>
+                        <refd:DocNo>779</refd:DocNo>
+                        <refd:DocDate>2012-07-30</refd:DocDate>
+                        <refd:ResolvedQuantity>0.0000000</refd:ResolvedQuantity>
+                        <refd:Pages>0</refd:Pages>
+                        <refd:AddInfo></refd:AddInfo>
+                        <refd:IsAttach>0</refd:IsAttach>
+                    </refd:Document>
+                    <refd:Document xmlns:refd="http://www.minprom.gov.ru/schemas/2016/Request">
+                        <refd:DocCode>Внешнеторговый договор (контракт)</refd:DocCode>
+                        <refd:Authority>Заявитель</refd:Authority>
+                        <refd:DocName>Копия внешнеторгового договора (контракта)</refd:DocName>
+                        <refd:DocNo>YHMY-2017-0103</refd:DocNo>
+                        <refd:DocDate>2017-04-27</refd:DocDate>
+                        <refd:BeginDate>2017-04-27</refd:BeginDate>
+                        <refd:EndDate>2017-12-31</refd:EndDate>
+                        <refd:ResolvedQuantity>2000.0000000</refd:ResolvedQuantity>
+                        <refd:MeasureName>M3</refd:MeasureName>
+                        <refd:MeasureCode>113</refd:MeasureCode>
+                        <refd:Pages>5</refd:Pages>
+                        <refd:AddInfo></refd:AddInfo>
+                        <refd:FileName>контракт YHMY-2017-0103.rar</refd:FileName>
+                        <refd:FileID>7E0802C1-019F-4ED3-BF59-254632769EBB</refd:FileID>
+                        <refd:FileHash>MD5#zuyhDBmdvIWHhMjJgqXz5Q==</refd:FileHash>
+                        <refd:IsAttach>1</refd:IsAttach>
+                    </refd:Document>
+                </refd:Reason>
+                <refd:DepartmentCode>000</refd:DepartmentCode>
+                <refd:DepartmentShortName>Департамент международного сотрудничества</refd:DepartmentShortName>
+            </refd:Request>
+        </refd:Requests>
+    </env:Body>
+</env:Envelope>
